@@ -15,7 +15,7 @@ def run_exact(A, b):
     #print np.linalg.det(A)
     x = np.dot(np.linalg.inv(A), b)
 
-    print "x=", x
+    print("x=", x)
 
 #SOLUTION BY SUCCESSIVE OVER RELAXATION METHOD
 def run_SOR(A,b):
@@ -30,9 +30,9 @@ def run_SOR(A,b):
     D = A.diagonal()
     A = A.tocsr()
     
-    for iteration in xrange(100):
+    for iteration in range(100):
         s = np.zeros(b.shape[0])  
-        for row in xrange(rows):
+        for row in range(rows):
             cols = A.indices[A.indptr[row]:A.indptr[row+1]]
             
             for j, col in enumerate(cols):
@@ -42,8 +42,8 @@ def run_SOR(A,b):
             if D[row]!=0.0:
                 x[row] += w*( (b[row]-s[row])/D[row] - x[row])
         
-    print "SOR: x=", x
-    print "norm = ", residual(A, x, b)
+    print("SOR: x=", x)
+    print("norm = ", residual(A, x, b))
 
 
 def residual(A, x, b):
