@@ -38,7 +38,7 @@ for iteration in range(2):
         for j in range(n):
             if j != i:
                 s = s + A[i][j] * x[j]
-        #x[i] = (1-w)*x[i] + w/A[i][i]*(b[i] - s)
+        # x[i] = (1-w)*x[i] + w/A[i][i]*(b[i] - s)
         x[i] = x[i] + w * ((b[i] - s) / A[i][i] - x[i])
     plt.plot(x)
 

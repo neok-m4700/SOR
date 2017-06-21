@@ -35,7 +35,7 @@ def my_SOR(D, L, U, colsL, colsU, b, A, rank, size, error):
     if rank == 0:
         n = len(D)
 
-    #-----------------------------------------------------
+    # ----------------------------------------------------
     n = comm.bcast(n, root=0)
     colsL = comm.bcast(colsL, root=0)
     colsU = comm.bcast(colsU, root=0)
@@ -43,7 +43,7 @@ def my_SOR(D, L, U, colsL, colsU, b, A, rank, size, error):
     U = comm.bcast(U, root=0)
     b = comm.bcast(b, root=0)
     A = comm.bcast(A, root=0)
-    #------------------------------------------------------
+    # -----------------------------------------------------
 
     if rank == 0:
         ranges = compute_range(n, size)
@@ -59,7 +59,7 @@ def my_SOR(D, L, U, colsL, colsU, b, A, rank, size, error):
             comm.send(D[ranges[i]:ranges[i + 1]], dest=i, tag=i)
     else:
         D = comm.recv(0, tag=rank)
-    #---------------------------------------------------------
+    # --------------------------------------------------------
     x = np.zeros(n)
     oldX = np.copy(x)
 
@@ -105,7 +105,7 @@ def my_residual(A, x, b):
 
 def organize_values(A, col, rows):
     n = len(col)
-    L, U, colsL, colsU  = ([] for _ in range(4))
+    L, U, colsL, colsU = ([] for _ in range(4))
     D = np.zeros(n - 1)
     for i in range(n - 1):
         L.append([])
@@ -143,18 +143,18 @@ def compute_range(n, size):
     return rangeList
 
 
-#-----------------------------------------------------------
+# ----------------------------------------------------------
 # parsing input
-#------------------------------------------------------------
+# -----------------------------------------------------------
 if len(sys.argv) < 4:
     if rank == 0:
         print("""Usage:
         mpiexec -np 2 python mpi_sor.py <matrix_filename> <vector_filename> <max_error>""")
     exit(0)
 
-#-------------------------------------------------------------
+# ------------------------------------------------------------
 # reading data from files
-#-------------------------------------------------------------
+# ------------------------------------------------------------
 if rank == 0:
     with open(sys.argv[1], 'r') as f:
         f.readline()
@@ -187,12 +187,12 @@ if rank == 0:
     (D, L, U, colsL, colsU) = organize_values(dataA, indptrA, indicesA)
 # initializing values for ranks!=0
 else:
-    D, L, U, colsU, colsL, A, B = ([] for _ in range(7))
+    D, L, U, colsU, colsL, A, b = ([] for _ in range(7))
 
 
-#--------------------------------
+# -------------------------------
 # finally running SOR
-#--------------------------------
+# -------------------------------
 x = my_SOR(D, L, U, colsL, colsU, b, A, rank, size, error=float(sys.argv[3]))
 
 

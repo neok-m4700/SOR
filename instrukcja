@@ -1,2 +1,0 @@
-odpalasz:
-mpiexec -np 2 python my_sor.py   lub inne liczbe zamiast 2
